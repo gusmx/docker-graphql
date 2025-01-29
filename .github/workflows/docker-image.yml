@@ -13,6 +13,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    # Se le asigna un nombre al 1er paso y la acción es el 'uses'.
+    - name: Checkout code
+      uses: actions/checkout@v4
+      # Para realizar búsqueda profunda en el historial de commits.
+      with:
+        fetch-depth: 0
+
+    - name: Docker login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      run: |
+        echo "Iniciando Login"
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        echo "Fin del Login
+    
+    # Nombre del 2o paso y su acción 'run'.
+    # - name: Build the Docker image
+    #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
