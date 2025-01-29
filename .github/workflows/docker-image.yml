@@ -24,11 +24,22 @@ jobs:
       env:    # Declaración de variables de entorno para usar los secrets.
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      run: |    # El pipe se utiliza para interpretar las siguiente lineas como independientes.
-        echo "Iniciando Login"
+      # run: |    # El pipe se utiliza para interpretar las siguientes lineas como independientes.
+      #   echo "Iniciando Login"
+      #   docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      #   echo "Fin del Login"
+      run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-        echo "Fin del Login"
     
-    # Nombre del Paso 3 y su acción 'run'.
+      # Paso 3:
+    - name: Build Docker Image
+      run: |
+        docker build -t gusmx/docker-graphql:0.0.2 .
+        
+      # Paso 4:
+    - name: Push Docker Image
+      run: |
+        docker push gusmx/docker-graphql:0.0.2 .
+    
     # - name: Build the Docker image
     #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
