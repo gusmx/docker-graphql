@@ -16,19 +16,19 @@ jobs:
     # Se le asigna un nombre al 1er paso y la acción es el 'uses'.
     - name: Checkout code
       uses: actions/checkout@v4
-      # Para realizar búsqueda profunda en el historial de commits.
       with:
-        fetch-depth: 0
+        fetch-depth: 0    # Para realizar búsqueda profunda en el historial de commits.
 
+    # Nombre del Paso 2 y su acción 'run'.
     - name: Docker login
-      env:
+      env:    # Declaración de variables de entorno para usar los secrets.
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      run: |
+      run: |    # El pipe se utiliza para interpretar las siguiente lineas como independientes.
         echo "Iniciando Login"
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-        echo "Fin del Login
+        echo "Fin del Login"
     
-    # Nombre del 2o paso y su acción 'run'.
+    # Nombre del Paso 3 y su acción 'run'.
     # - name: Build the Docker image
     #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
