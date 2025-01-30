@@ -13,35 +13,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Se le asigna un nombre al 1er paso y la acción es el 'uses'.
+    # Se le asigna un nombre al 1er paso (step) y la acción es el 'uses'.
     - name: Checkout code
       uses: actions/checkout@v4
       with:
         fetch-depth: 0    # Para realizar búsqueda profunda en el historial de commits.
+
+    - name: Git Semantic Version
+      uses: PaulHatch/semantic-version@v4.0.3
+      # uses: PaulHatch/semantic-version@v5.4.0
+      with:
+        major_pattern: "major:"    # Busca el patrón al inicio del mensaje del commit
+        minor_pattern: "feat:"
+        # format: "${major}.${minor}.${patch}-prerelease${increment}"
+        format: "${major}.${minor}.${patch}-${increment}"
+      id: semVersion    # Para identificar este paso y poder referenciarlo en otros pasos.
 
     # Nombre del Paso 2 y su acción 'run'.
     - name: Docker login
       env:    # Declaración de variables de entorno para usar los secrets.
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+        NEW_VERSION: ${{ steps.semVersion.outputs.version }}
       # run: |    # El pipe se utiliza para interpretar las siguientes lineas como independientes.
       #   echo "Iniciando Login"
       #   docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       #   echo "Fin del Login"
       run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    
-      # Paso 3:
-    - name: Build Docker Image
-      run: |
-        docker build -t gusmx/docker-graphql:0.0.2 .
-        docker build -t gusmx/docker-graphql:latest .
+        echo "New version: $NEW_VERSION  !!!!!!!!!!!!!" 
+      # docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      
+    #   # Paso 3:
+    # - name: Build Docker Image
+    #   run: |
+    #     docker build -t gusmx/docker-graphql:0.0.2 .
+    #     docker build -t gusmx/docker-graphql:latest .
         
-      # Paso 4:
-    - name: Push Docker Image
-      run: |
-        docker push gusmx/docker-graphql:0.0.2
-        docker push gusmx/docker-graphql:latest
+    #   # Paso 4:
+    # - name: Push Docker Image
+    #   run: |
+    #     docker push gusmx/docker-graphql:0.0.2
+    #     docker push gusmx/docker-graphql:latest
     
     # - name: Build the Docker image
     #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
