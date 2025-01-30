@@ -20,12 +20,11 @@ jobs:
         fetch-depth: 0    # Para realizar búsqueda profunda en el historial de commits.
 
     - name: Git Semantic Version
-      # uses: PaulHatch/semantic-version@v4.0.3
       uses: PaulHatch/semantic-version@v5.4.0
       with:
         major_pattern: "major:"    # Busca el patrón al inicio del mensaje del commit
         minor_pattern: "feat:"
-        # format: "${major}.${minor}.${patch}-prerelease${increment}"
+        # version_format: "${major}.${minor}.${patch}-prerelease${increment}"
         version_format: "${major}.${minor}.${patch}-r${increment}"
       id: semVersion    # Para identificar este paso y poder referenciarlo en otros pasos.
 
