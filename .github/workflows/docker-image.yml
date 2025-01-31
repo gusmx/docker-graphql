@@ -45,16 +45,16 @@ jobs:
       env:
         NEW_VERSION: ${{ steps.semVersion.outputs.version }}
       run: |
-        docker build -t gusmx/docker-graphql:$NEW_VERSION .
-        docker build -t gusmx/docker-graphql:latest .
+        docker build -t ${{ secrets.DOCKER_USER }}/docker-graphql:$NEW_VERSION .
+        docker build -t ${{ secrets.DOCKER_USER }}/docker-graphql:latest .
         
       # Paso 4:
     - name: Push Docker Image
       env:
         NEW_VERSION: ${{ steps.semVersion.outputs.version }}
       run: |
-        docker push gusmx/docker-graphql:$NEW_VERSION
-        docker push gusmx/docker-graphql:latest
+        docker push ${{ secrets.DOCKER_USER }}/docker-graphql:$NEW_VERSION
+        docker push ${{ secrets.DOCKER_USER }}/docker-graphql:latest
     
     # - name: Build the Docker image
     #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
